@@ -714,15 +714,15 @@ class GoProFrameMaker(GoProFrameMakerParent):
         gpsData.append(data)
 
         if 'Duration' in videoFieldData:
-            _tsm = videoFieldData['Duration'].strip().split(' ')
-            if len(_tsm) > 0:
-                _t = float(_tsm[0])
-                _sm = _tsm[-1]
-                if _sm == 's':
-                    videoFieldData['Duration'] = "00:00:{:06.3F}".format(_t)
-            else:
-                if '.' not in videoFieldData['Duration']:
-                    videoFieldData['Duration'] = "{}.000".format(videoFieldData['Duration'].strip())
+            # _tsm = videoFieldData['Duration'].strip().split(' ')
+            # if len(_tsm) > 0:
+            #     _t = float(_tsm[0])
+            #     _sm = _tsm[-1]
+            #     if _sm == 's':
+            #         videoFieldData['Duration'] = "00:00:{:06.3F}".format(_t)
+            # else:
+            if '.' not in videoFieldData['Duration']:
+                videoFieldData['Duration'] = "{}.000".format(videoFieldData['Duration'].strip())
 
         output = GoProFrameMakerHelper.gpsTimestamps(gpsData, videoFieldData)
         args = self.getArguments()
