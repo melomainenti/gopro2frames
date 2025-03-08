@@ -76,25 +76,19 @@ if __name__ == '__main__':
         for k, v in selected_args.items():
             print(Fore.GREEN + "{}: {}".format(k, v))
         print(Style.RESET_ALL)
-        if selected_args['time_warp'] != None:
-            print(Fore.RED + "\nTime warp value is selected, so the video is considered Time warped, if this is not supposed to be then please remove the value from config.ini key named: `time_warp`")
-        else:
-            print(Fore.RED + "\nTime warp value is not selected, if the video is Time warped, please make sure config.ini has value for key named: `time_warp`")
+        # if selected_args['time_warp'] != None:
+        #     print(Fore.RED + "\nTime warp value is selected, so the video is considered Time warped, if this is not supposed to be then please remove the value from config.ini key named: `time_warp`")
+        # else:
+        #     print(Fore.RED + "\nTime warp value is not selected, if the video is Time warped, please make sure config.ini has value for key named: `time_warp`")
+        # print(Style.RESET_ALL)
+
+        gfm.initiateProcessing()
+        print(Fore.GREEN + "\nProcessing finished! If there are no images in the folder please see logs to gain additional information.")
+        print(Fore.GREEN + "\nYou can see {} folder to see the images.".format(selected_args['media_folder_full_path']))
+        print(Fore.BLUE + "\nHave a nice day!")
         print(Style.RESET_ALL)
-        
-        check = input(Fore.RED + "Are you sure you want to start processing?(y/n)")
-        print(Style.RESET_ALL)
-        check = 'y' if check.lower().strip() == 'y' else 'n'
-        if check == 'y':
-            gfm.initiateProcessing()
-            print(Fore.GREEN + "\nProcessing finished! If there are no images in the folder please see logs to gain additional information.")
-            print(Fore.GREEN + "\nYou can see {} folder to see the images.".format(selected_args['media_folder_full_path']))
-            print(Fore.BLUE + "\nHave a nice day!")
-            print(Style.RESET_ALL)
-            exit(0)
-        else:
-            print(Fore.RED + "Processing stopped!")
-            print(Style.RESET_ALL)
+        exit(0)
+
             
     else:
         input(Fore.RED + "Processing stopped!")
