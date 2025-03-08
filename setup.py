@@ -36,13 +36,14 @@ class BootstrapCommand(Command):
 
     def run(self):
 
-    if platform.system() == "Windows":
-        os.system("cd .\\libs\\fusion2sphere-batch && make")
-        os.system("cd .\\libs\\MAX2sphere-batch && make")
-    else:
-        os.system("cd ./libs/fusion2sphere-batch && make")
-        os.system("cd ./libs/MAX2sphere-batch && make")
-        sys.exit()
+        if platform.system() == "Windows":
+            os.system("cd .\\libs\\fusion2sphere-batch && make")
+            os.system("cd .\\libs\\MAX2sphere-batch && make")
+        else:
+            os.system("cd ./libs/fusion2sphere-batch && make")
+            os.system("cd ./libs/MAX2sphere-batch && make")
+            sys.exit()
+
 
 setup(
     name='gopro-frame-maker',
