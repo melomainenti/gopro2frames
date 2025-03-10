@@ -1,6 +1,6 @@
-colorama
-geographiclib
-gpxpy
-haversine
-lxml
-pandas
+colorama==0.4.6
+geographiclib==2.0
+gpxpy==1.6.2
+haversine==2.9.0
+lxml==5.3.1
+pandas==2.2.3
