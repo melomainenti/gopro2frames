@@ -41,17 +41,20 @@ RUN git clone https://github.com/melomainenti/gopro2frames.git && \
 
 WORKDIR /usr/src/app/gopro2frames
 
+RUN rm -rf max2sphere/docs
+RUN rm -rf max2sphere/testframes
+
+RUN rm -rf fusion2sphere/pgm-examples
+RUN rm -rf fusion2sphere/testframes
+RUN rm -rf fusion2sphere/parameter-examples
+
+RUN git pull
+
 RUN python3 -m venv venv
 
 SHELL ["/bin/bash", "-c"]
 
-RUN source venv/bin/activate
-
-RUN pip3 install -r requirements.txt
-
-COPY GS010006.360 .
-
-
+RUN source venv/bin/activate && pip3 install -r requirements.txt
 
 #ENV PYTHONPATH "${PYTHONPATH}:/usr/src/app/gopro-frame-maker"
 
