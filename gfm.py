@@ -82,17 +82,14 @@ if __name__ == '__main__':
                 # print(Style.RESET_ALL)
 
                 gfm.initiateProcessing()
-                print(Fore.GREEN + "\nProcessing finished! If there are no images in the folder please see logs to gain additional information.")
-                print(Fore.GREEN + "\nYou can see {} folder to see the images.".format(selected_args['media_folder_full_path']))
-                print(Fore.BLUE + "\nHave a nice day!")
+                print(Fore.GREEN + f"\nProcessing {filename} finished! If there are no images in the folder please see logs to gain additional information.")
                 print(Style.RESET_ALL)
-                raise Exception(f"Arquivo {filename} processado!")
 
 
             else:
                 input(Fore.RED + "Processing stopped!")
                 print(Style.RESET_ALL)
-            raise Exception(f"Processamento do arquivo {filename} parado!")
+                raise Exception(f"Processamento do arquivo {filename} parado!")
     
 
 
