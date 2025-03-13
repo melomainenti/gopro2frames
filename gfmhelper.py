@@ -278,6 +278,18 @@ class GoProFrameMakerHelper():
         }
 
     @staticmethod
+    def format_video_duration(duration):
+        _tsm = duration.strip().split(' ')
+        if len(_tsm) > 0:
+            _t = float(_tsm[0])
+            _sm = _tsm[-1]
+            if _sm == 's':
+                return "00:00:{:06.3F}".format(_t)
+        else:
+            if '.' not in duration:
+                return "{}.000".format(duration.strip())
+
+    @staticmethod
     def gpsTimestamps(gpsData, videoFieldData):
         
         gpx = gpxpy.gpx.GPX()
@@ -329,15 +341,19 @@ class GoProFrameMakerHelper():
                 #Get Times from metadata
 
                 #_e_date = start_gps["GPSDateTime"].split(" ")[0]
-                try:
-                    zero_start = datetime.datetime.strptime("2022:1:1 00:00:00.000", "%Y:%m:%d %H:%M:%S.%f")
-                    zero_duration = datetime.datetime.strptime("2022:1:1 {}".format(videoFieldData['Duration']), "%Y:%m:%d %H:%M:%S.%f")
 
-                    start_time = datetime.datetime.strptime(start_gps["GPSDateTime"].replace("Z", ""), "%Y:%m:%d %H:%M:%S.%f")
+                zero_start = datetime.datetime.strptime("2022:1:1 00:00:00.000", "%Y:%m:%d %H:%M:%S.%f")
+                try:
+                    zero_duration = datetime.datetime.strptime("2022:1:1 {}".format(videoFieldData['Duration']), "%Y:%m:%d %H:%M:%S.%f")
                 except Exception as e:
+                    videoFieldData['Duration'] = GoProFrameMakerHelper.format_video_duration(videoFieldData['Duration'])
                     print(f"duration: {videoFieldData['Duration']}")
-                    print(f"start_gps: {start_gps['GPSDateTime']}")
-                    raise e
+                    zero_duration = datetime.datetime.strptime("2022:1:1 {}".format(videoFieldData['Duration']),
+                                                               "%Y:%m:%d %H:%M:%S.%f")
+                start_time = datetime.datetime.strptime(start_gps["GPSDateTime"].replace("Z", ""), "%Y:%m:%d %H:%M:%S.%f")
+
+
+
                 
                 l_1 = (start_time - first_start_time).total_seconds()
                 l_2 = (zero_duration - zero_start).total_seconds()
