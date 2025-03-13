@@ -47,6 +47,9 @@ class GoProFrameMakerHelper():
     @staticmethod
     def decimalDivide(num1, num2):
         try:
+            print(f"decimal divide: {num1} {num2}")
+            print(type(num1))
+            print(type(num1))
             num1 = Decimal(round(num1, 6))
             num2 = Decimal(round(num2, 6))
             if num2 == 0.0:
@@ -60,7 +63,7 @@ class GoProFrameMakerHelper():
             print(f"decimal divide: {num1} {num2}")
             print(type(num1))
             print(type(num1))
-            raise e
+            return 0.0
         return round(float(num), 3)
 
     @staticmethod
