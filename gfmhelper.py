@@ -58,6 +58,8 @@ class GoProFrameMakerHelper():
                 num = abs(num)
         except Exception as e:
             print(f"decimal divide: {num1} {num2}")
+            print(type(num1))
+            print(type(num1))
             raise e
         return round(float(num), 3)
 
