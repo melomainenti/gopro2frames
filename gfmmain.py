@@ -87,15 +87,12 @@ class GoProFrameMakerParent():
         dateTimeCurrent = self.__args["date_time_current"]
         if not os.path.exists(logFolder):
             os.makedirs(logFolder, exist_ok=True)
-        if self.__args['debug'] is True:
-            logHandlers = [
-                logging.FileHandler(logFolder+os.sep+'trekview-gopro-{}.log'.format(dateTimeCurrent)),
-                logging.StreamHandler()
-            ]
-        else:
-            logHandlers = [
-                logging.FileHandler(logFolder+os.sep+'trekview-gopro-{}.log'.format(dateTimeCurrent))
-            ]
+        # if self.__args['debug'] is True:
+        logHandlers = [
+            logging.FileHandler(logFolder+os.sep+'trekview-gopro-{}.log'.format(dateTimeCurrent)),
+            logging.StreamHandler()
+        ]
+
         logging.basicConfig(
             level=logging.DEBUG,
             datefmt='%m/%d/%Y %I:%M:%S %p',
