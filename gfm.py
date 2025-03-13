@@ -5,13 +5,9 @@ from gfmmain import GoProFrameMaker
 
 def process_video(filename):
     cfg = GoProFrameMakerHelper.getConfig()
-    parser = argparse.ArgumentParser()
-    # getting args
-    args = parser.parse_args()
-    args.input = [filename]
-    # get config default
+
     default = cfg['config']
-    default['input'] = args.input
+    default['input'] = [filename]
     args = type('args', (object,), default)
 
     gfmValidated = GoProFrameMakerHelper.validateArgs(args)
