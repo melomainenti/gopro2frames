@@ -329,10 +329,15 @@ class GoProFrameMakerHelper():
                 #Get Times from metadata
 
                 #_e_date = start_gps["GPSDateTime"].split(" ")[0]
-                zero_start = datetime.datetime.strptime("2022:1:1 00:00:00.000", "%Y:%m:%d %H:%M:%S.%f")
-                zero_duration = datetime.datetime.strptime("2022:1:1 {}".format(videoFieldData['Duration']), "%Y:%m:%d %H:%M:%S.%f")
+                try:
+                    zero_start = datetime.datetime.strptime("2022:1:1 00:00:00.000", "%Y:%m:%d %H:%M:%S.%f")
+                    zero_duration = datetime.datetime.strptime("2022:1:1 {}".format(videoFieldData['Duration']), "%Y:%m:%d %H:%M:%S.%f")
 
-                start_time = datetime.datetime.strptime(start_gps["GPSDateTime"].replace("Z", ""), "%Y:%m:%d %H:%M:%S.%f")
+                    start_time = datetime.datetime.strptime(start_gps["GPSDateTime"].replace("Z", ""), "%Y:%m:%d %H:%M:%S.%f")
+                except Exception as e:
+                    print(f"duration: {videoFieldData['Duration']}")
+                    print(f"start_gps: {start_gps['GPSDateTime']}")
+                    raise e
                 
                 l_1 = (start_time - first_start_time).total_seconds()
                 l_2 = (zero_duration - zero_start).total_seconds()
