@@ -72,7 +72,7 @@ class GoProFrameMakerParent():
                 shutil.rmtree(media_folder_full_path)
             os.makedirs(media_folder_full_path, exist_ok=True) 
         except:
-            exit('Unable to create main media directory {}'.format(media_folder_full_path))
+            raise Exception('Unable to create main media directory {}'.format(media_folder_full_path))
         
         args['log_folder'] = Path('{}{}{}'.format(str(args['current_directory'].resolve()), os.sep, 'logs'))
         args['date_time_current'] = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
@@ -262,7 +262,7 @@ class GoProFrameMakerParent():
                 "error": str(e)
             }
         except:
-            exit("Error running subprocess. Please try again.")
+            raise Exception("Error running subprocess. Please try again.")
         return ret
 
     def __exiftool(self, command, sh=0):
@@ -278,7 +278,7 @@ class GoProFrameMakerParent():
             print(command)
             logging.critical(ret["error"])
             print(ret["error"])
-            exit("Error occured while executing exiftool.")
+            raise Exception("Error occured while executing exiftool.")
         return ret
 
     def _ffmpeg(self, command, sh=0):
@@ -289,7 +289,7 @@ class GoProFrameMakerParent():
         
         """if ret["error"] is not None:
             logging.critical(ret["error"])
-            exit("Error occured while executing ffmpeg, please see logs for more info.")"""
+            raise Exception("Error occured while executing ffmpeg, please see logs for more info.")"""
         return True
 
     def exiftool(self, cmd):
@@ -298,7 +298,7 @@ class GoProFrameMakerParent():
         if output["output"] is None:
             logging.critical(output["error"])
             logging.critical("Unable to get metadata information")
-            exit("Unable to get metadata information")
+            raise Exception("Unable to get metadata information")
         else:
             return output["output"]
 
@@ -308,7 +308,7 @@ class GoProFrameMakerParent():
         if output["output"] is None:
             logging.critical(output["error"])
             logging.critical("Unable to get metadata information")
-            exit("Unable to get metadata information")
+            raise Exception("Unable to get metadata information")
         else:
             return output["output"]
 
@@ -336,7 +336,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
             fileStat = os.stat(video_file)
             if fileStat.st_size > 8000000000:
                 logging.critical("The following file {} is too large. The maximum size for a single video is 8GB".format(video_file))
-                exit("The following file {} is too large. The maximum size for a single video is 8GB".format(video_file))
+                raise Exception("The following file {} is too large. The maximum size for a single video is 8GB".format(video_file))
         #validation fusion video file size
         elif(len(args["input"]) == 2):
             video_file_front = str(args["input"][0].resolve())
@@ -345,10 +345,10 @@ class GoProFrameMaker(GoProFrameMakerParent):
             file_stat_back = os.stat(video_file_back)
             if file_stat_front.st_size > 4000000000:
                 logging.critical("The following file {} is too large. The maximum size for a single video is 4GB".format(video_file_front))
-                exit("The following file {} is too large. The maximum size for a single video is 4GB".format(video_file_front))
+                raise Exception("The following file {} is too large. The maximum size for a single video is 4GB".format(video_file_front))
             if file_stat_back.st_size > 4000000000:
                 logging.critical("The following file {} is too large. The maximum size for a single video is 4GB".format(file_stat_back))
-                exit("The following file {} is too large. The maximum size for a single video is 4GB".format(file_stat_back))
+                raise Exception("The following file {} is too large. The maximum size for a single video is 4GB".format(file_stat_back))
         
         #getting video metadata
         metadata = self.__getVideoMetadata()
@@ -375,7 +375,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
             if camera == 'max':
                 self.__breakIntoFrames360(metadata, video_file, media_folder_full_path)
             else:
-                exit('Unknown camera type.')
+                raise Exception('Unknown camera type.')
         elif fileType in ["mp4", "mov"]:
             if camera == 'max':
                 self.__breakIntoFrames(video_file, media_folder_full_path)
@@ -405,9 +405,9 @@ class GoProFrameMaker(GoProFrameMakerParent):
                 if os.path.exists(fusion_back):
                     shutil.rmtree(fusion_back)
             else:
-                exit('Unknown camera type.')
+                raise Exception('Unknown camera type.')
         else:
-            exit('Unknown file type.')
+            raise Exception('Unknown file type.')
 
         #ms calculation
         if args["time_warp"] is None:
@@ -455,7 +455,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
             
             self.__updateImagesMetadata(metadata, equirectangular)
         else:
-            exit('Not enough images available for geotagging.')
+            raise Exception('Not enough images available for geotagging.')
 
     def __validateVideo(self, videoData):
         args = self.getArguments()
@@ -464,19 +464,19 @@ class GoProFrameMaker(GoProFrameMakerParent):
         if videoData['MetaFormat'].strip()  != 'gpmd':
             metaFormat = False
             logging.critical("Your video has no telemetry. You need to enable GPS on your GoPro to ensure GPS location is captured.")
-            exit("Your video has no telemetry. You need to enable GPS on your GoPro to ensure GPS location is captured.")
+            raise Exception("Your video has no telemetry. You need to enable GPS on your GoPro to ensure GPS location is captured.")
         else:
             metaFormat = True
         
         if videoData["ProjectionType"].strip()  != 'equirectangular':
             if metaFormat is False:
                 logging.critical("This does not appear to be a GoPro 360 video. Only mp4 videos with a 360 equirectangular projection are accepted. Please make sure you are uploading 360 mp4 videos from your camera.")
-                exit("This does not appear to be a GoPro 360 video. Only mp4 videos with a 360 equirectangular projection are accepted. Please make sure you are uploading 360 mp4 videos from your camera.")
+                raise Exception("This does not appear to be a GoPro 360 video. Only mp4 videos with a 360 equirectangular projection are accepted. Please make sure you are uploading 360 mp4 videos from your camera.")
         
         devices = ["Fusion", "GoPro Max"]
         if videoData['DeviceName'].strip() not in devices:
             logging.critical("This file does not look like it was captured using a GoPro camera. Only content taken using a GoPro 360 Camera are currently supported.")
-            exit("This file does not look like it was captured using a GoPro camera. Only content taken using a GoPro 360 Camera are currently supported.")
+            raise Exception("This file does not look like it was captured using a GoPro camera. Only content taken using a GoPro 360 Camera are currently supported.")
         
         if args["frame_rate"] > 5:
             logging.warning("It appears the frame rate of this video is very low. You can continue, but the images in the Sequence might not render as expected.")
@@ -489,12 +489,12 @@ class GoProFrameMaker(GoProFrameMakerParent):
         FileType = ["MP4", "360", "MOV"]
         if videoData["FileType"].strip().upper() not in FileType:
             logging.critical("The following filetype {} is not supported. Please upload only .mp4 or .360 videos.".format(videoData["FileType"]))
-            exit("The following filetype {} is not supported. Please upload only .mp4 or .360 videos.".format(videoData["FileType"]))
+            raise Exception("The following filetype {} is not supported. Please upload only .mp4 or .360 videos.".format(videoData["FileType"]))
         else:
             if videoData["FileType"].strip() == "360":
                 if videoData["CompressorName"] == "H.265":
                     logging.critical("This does not appear to be a GoPro .360 file. Please use the .360 video created from your GoPro camera only.")
-                    exit("This does not appear to be a GoPro .360 file. Please use the .360 video created from your GoPro camera only.")
+                    raise Exception("This does not appear to be a GoPro .360 file. Please use the .360 video created from your GoPro camera only.")
 
     def __breakIntoFrames(self, filename, fileoutput, prefix=''):
         args = self.getArguments()
@@ -587,7 +587,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
         except Exception as e:
             logging.info(str(e))
             print(str(e))
-            exit("Unable to convert 360 deg video.")
+            raise Exception("Unable to convert 360 deg video.")
 
         if os.path.exists(track0):
             shutil.rmtree(track0)
@@ -601,7 +601,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
         xmlFileName = "{}{}{}.xml".format(args["media_folder_full_path"], os.sep, args["media_folder"])
         self.__saveAFile(xmlFileName, exif_xml_data)
         if(Path(xmlFileName).is_file() == False):
-            exit('Unable to save xml file: {}'.format(xmlFileName))
+            raise Exception('Unable to save xml file: {}'.format(xmlFileName))
         return self.__parseMetadata(xmlFileName)
 
     def __parseMetadata(self, xmlFileName):
@@ -729,7 +729,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
         output["filename"] = "{}{}{}_video.gpx".format(args["media_folder_full_path"], os.sep, args["media_folder"])
         self.__saveAFile(output["filename"], output['gpx_data'])
         if(Path(output["filename"]).is_file() == False):
-            exit('Unable to save file: {}'.format(output["filename"]))
+            raise Exception('Unable to save file: {}'.format(output["filename"]))
 
         return {
             "filename": output["filename"],
@@ -884,7 +884,7 @@ class GoProFrameMaker(GoProFrameMakerParent):
         filename = "{}{}{}_video.gpx".format(args["media_folder_full_path"], os.sep, args["media_folder"])
         self.__saveAFile(filename, gpxData)
         if(Path(filename).is_file() == False):
-            exit('Unable to save file: {}'.format(filename))
+            raise Exception('Unable to save file: {}'.format(filename))
 
         return {
             "filename": filename,
@@ -1023,4 +1023,4 @@ class GoProFrameMaker(GoProFrameMakerParent):
         filename = "{}{}{}_photos.gpx".format(args["media_folder_full_path"], os.sep, args["media_folder"])
         self.__saveAFile(filename, gpxData)
         if(Path(filename).is_file() == False):
-            exit('Unable to save file: {}'.format(filename))
+            raise Exception('Unable to save file: {}'.format(filename))
